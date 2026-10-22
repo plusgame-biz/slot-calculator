@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>スロット確率計算</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 20px 16px calc(24px + env(safe-area-inset-bottom));
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
+    background: #f3f5f8; color: #222;
+  }
+  main { max-width: 520px; margin: 0 auto; }
+  h1 { margin: 0 0 22px; font-size: 25px; }
+  label { display: block; margin: 0 0 7px; font-weight: 700; }
+  input {
+    display: block; width: 100%; padding: 14px; margin: 0 0 20px;
+    border: 1px solid #cbd0d8; border-radius: 11px; background: white;
+    font-size: 20px; color: #222;
+  }
+  #result {
+    margin-top: 22px; padding: 18px; border-radius: 12px;
+    background: white; font-size: 21px; font-weight: 700;
+    overflow-wrap: anywhere; min-height: 62px;
+  }
+  .note { color: #626975; font-size: 13px; margin-top: 14px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<main>
+  <h1>🎰 スロット確率計算</h1>
+  <label for="games">総ゲーム数</label>
+  <input id="games" type="number" inputmode="numeric" value="3000" min="1">
+  <label for="hits">当選回数</label>
+  <input id="hits" type="number" inputmode="numeric" value="30" min="0">
+  <div id="result" aria-live="polite">実測確率：1/100.00</div>
+  <p class="note">数字を変更すると自動で計算します。総ゲーム数は1以上、当選回数は0以上で入力してください。</p>
+</main>
+<script>
+function calculate() {
+  const gamesInput = document.getElementById("games");
+  const hitsInput = document.getElementById("hits");
+  const result = document.getElementById("result");
+  const games = Number(gamesInput.value);
+  const hits = Number(hitsInput.value);
+
+  if (gamesInput.value === "" || hitsInput.value === "" ||
+      !Number.isFinite(games) || !Number.isFinite(hits) ||
+      games <= 0 || hits < 0 || hits > games) {
+    result.textContent = "入力値を確認してください";
+    return;
+  }
+  if (hits === 0) {
+    result.textContent = "当選0回：実測確率は計算できません";
+    return;
+  }
+  result.textContent = "実測確率：1/" + (games / hits).toFixed(2);
+}
+document.getElementById("games").addEventListener("input", calculate);
+document.getElementById("hits").addEventListener("input", calculate);
+calculate();
+</script>
+</body>
+</html>
